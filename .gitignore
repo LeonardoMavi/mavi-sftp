@@ -6,3 +6,4 @@ manual-render/
 
 *.log
 .env
+~$*.docx

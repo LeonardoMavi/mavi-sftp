@@ -475,6 +475,14 @@ def create_concise_document():
     doc.add_page_break()
     add_header_footer(doc.sections[0])
 
+    add_heading(doc, "Conteúdo do manual", 1)
+    add_feature_table(doc, [
+        ("Seções 1 a 5", "Uso rápido: instalação, conexão, navegação, arquivos e downloads."),
+        ("SEÇÃO 6", "TRATAMENTO DE BASES DIÁRIAS — PASSO A PASSO DETALHADO."),
+        ("Seções 7 e 8", "Atualizações e solução rápida de problemas."),
+    ])
+    add_note(doc, "Principal", "O processo completo de vendas diárias começa na seção 6, em uma página exclusiva e com sete subseções operacionais.")
+
     add_heading(doc, "1. Visão geral", 1)
     doc.add_paragraph("O Mavi SFTP conecta-se a servidores SFTP para navegar, baixar, converter, enviar e organizar arquivos. O aplicativo também possui um tratamento específico para bases de vendas diárias.")
     add_feature_table(doc, [
@@ -516,7 +524,8 @@ def create_concise_document():
     doc.add_paragraph("No download em lote, escolha Todos Arquivos, um período MM/AAAA identificado no nome dos arquivos ou Venda Diária. Depois selecione a pasta local e acompanhe a barra de progresso e o Log.")
     add_note(doc, "Conversão", "O aplicativo detecta UTF-8/Latin-1 e separadores comuns. Colunas identificadoras como código, EAN, CPF e CNPJ são preservadas como texto. Bases muito grandes podem gerar mais de um XLSX.")
 
-    add_heading(doc, "6. Tratamento de bases de Venda Diária", 1)
+    doc.add_page_break()
+    add_heading(doc, "6. TRATAMENTO DE BASES DIÁRIAS — PASSO A PASSO DETALHADO", 1)
     doc.add_paragraph("Este fluxo é diferente do download mensal comum. Ele reúne as fontes necessárias, lê os registros, separa o conteúdo por data comercial e produz arquivos finais diários e um consolidado mensal.")
 
     add_heading(doc, "6.1 Arquivos reconhecidos", 2)
