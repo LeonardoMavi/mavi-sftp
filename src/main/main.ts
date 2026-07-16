@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import * as fs from 'fs';
 import * as path from 'path';
 import { registerConnectionHandlers, endClient } from './ipc/connection.js';
 import { registerFileHandlers } from './ipc/file-operations.js';
@@ -110,11 +111,43 @@ function configureAutoUpdater(): void {
   }, 3000);
 }
 
+function registerManualHandler(): void {
+  ipcMain.handle('manual:download', async () => {
+    const fileName = 'Manual-do-Usuario-Mavi-SFTP.docx';
+    const candidates = [
+      path.join(process.resourcesPath, 'manual', fileName),
+      path.join(app.getAppPath(), fileName),
+      path.join(process.cwd(), fileName),
+    ];
+    const sourcePath = candidates.find(candidate => fs.existsSync(candidate));
+
+    if (!sourcePath) {
+      return { ok: false, error: 'Manual não encontrado dentro do aplicativo.' };
+    }
+
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+      title: 'Salvar manual do Mavi SFTP',
+      defaultPath: fileName,
+      filters: [{ name: 'Documento do Word', extensions: ['docx'] }],
+    });
+
+    if (canceled || !filePath) return { ok: false, canceled: true };
+
+    try {
+      await fs.promises.copyFile(sourcePath, filePath);
+      return { ok: true, localPath: filePath };
+    } catch (error: any) {
+      return { ok: false, error: error.message || 'Não foi possível salvar o manual.' };
+    }
+  });
+}
+
 // ── Lifecycle ─────────────────────────────────────────────────────────────────
 
 app.whenReady().then(() => {
   createWindow();
   configureAutoUpdater();
+  registerManualHandler();
   registerConnectionHandlers();
   registerFileHandlers(() => mainWindow);
 

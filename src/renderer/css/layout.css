@@ -85,6 +85,26 @@
   -webkit-app-region: no-drag;
 }
 
+.titlebar-manual {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.titlebar-manual:hover {
+  border-color: var(--mavi-cyan);
+  color: var(--mavi-cyan);
+  background: var(--bg-hover);
+}
+
 .window-controls {
   display: flex;
   align-items: stretch;
