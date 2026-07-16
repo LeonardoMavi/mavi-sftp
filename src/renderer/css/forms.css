@@ -1,0 +1,124 @@
+/* ── Form groups ───────────────────────────────────────────────────────────── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group.flex-grow { flex: 1; }
+
+.form-row {
+  display: flex;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Inputs ────────────────────────────────────────────────────────────────── */
+input[type="text"],
+input[type="number"],
+input[type="password"] {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+input:focus {
+  border-color: var(--mavi-cyan);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+input::placeholder { color: var(--text-muted); opacity: 0.7; }
+
+input[type="number"] { width: 72px; }
+
+/* ── Botões ────────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* Gradiente Mavi no botão primário */
+.btn-primary {
+  background: linear-gradient(135deg, var(--mavi-grad-start), var(--mavi-grad-end));
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0, 212, 204, 0.2);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--mavi-cyan-soft), var(--mavi-deep));
+  box-shadow: 0 4px 20px rgba(0, 212, 204, 0.35);
+  transform: translateY(-1px);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-danger:hover { background: var(--danger-hover); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  color: var(--mavi-cyan);
+  border-color: var(--border-accent);
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg-raised);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-sm:hover {
+  background: var(--bg-hover);
+  color: var(--mavi-cyan);
+  border-color: var(--border-accent);
+}
+
+.btn-icon {
+  padding: 4px 6px;
+  font-size: 12px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-icon:hover {
+  background: var(--bg-hover);
+  color: var(--mavi-cyan);
+  border-color: var(--border-accent);
+}

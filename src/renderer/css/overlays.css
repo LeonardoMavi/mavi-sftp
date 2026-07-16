@@ -1,0 +1,203 @@
+/* ── Modal ─────────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 16, 24, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-accent);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Detalhe gradiente Mavi no topo do modal */
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mavi-grad-start), var(--mavi-grad-end));
+}
+
+.modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-input {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 9px 12px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-input:focus {
+  border-color: var(--mavi-cyan);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: min(420px, calc(100vh - 220px));
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.modal-options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-options::-webkit-scrollbar-track {
+  background: var(--bg-base);
+  border-radius: 999px;
+}
+
+.modal-options::-webkit-scrollbar-thumb {
+  background: var(--border-accent);
+  border-radius: 999px;
+}
+
+.modal-option {
+  width: 100%;
+  min-height: 38px;
+  padding: 9px 12px;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.modal-option:hover,
+.modal-option:focus {
+  border-color: var(--mavi-cyan);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  outline: none;
+}
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ── Toast ─────────────────────────────────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+}
+
+.toast {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 16px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-primary);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.22s ease;
+  max-width: 320px;
+}
+
+/* Borda esquerda com cor semântica */
+.toast.ok   { border-left: 3px solid var(--mavi-cyan); }
+.toast.err  { border-left: 3px solid var(--danger); }
+.toast.info { border-left: 3px solid var(--mavi-teal); }
+
+/* Download progress */
+.download-progress {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(460px, calc(100vw - 48px));
+  background: var(--bg-raised);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  z-index: 1900;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.download-progress.done {
+  border-color: rgba(0, 212, 204, 0.5);
+}
+
+.download-progress.error {
+  border-color: rgba(247, 95, 95, 0.55);
+}
+
+.download-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.download-progress-track {
+  height: 8px;
+  overflow: hidden;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.download-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--mavi-grad-start), var(--mavi-grad-end));
+  border-radius: inherit;
+  transition: width 0.22s ease;
+}
+
+.download-progress.error .download-progress-fill {
+  background: var(--danger);
+}
+
+.download-progress-info {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(24px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}

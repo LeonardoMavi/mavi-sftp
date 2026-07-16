@@ -1,0 +1,112 @@
+/* ── Fontes locais Mavi ────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('../fonts/MontserratAlternates-ExtraLight.ttf') format('truetype');
+  font-weight: 200; font-style: normal;
+}
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('../fonts/MontserratAlternates-Light.ttf') format('truetype');
+  font-weight: 300; font-style: normal;
+}
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('../fonts/MontserratAlternates-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal;
+}
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('../fonts/MontserratAlternates-Medium.ttf') format('truetype');
+  font-weight: 500; font-style: normal;
+}
+@font-face {
+  font-family: 'MontserratAlternates';
+  src: url('../fonts/MontserratAlternates-SemiBold.ttf') format('truetype');
+  font-weight: 600; font-style: normal;
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Identidade Mavi ───────────────────────────────────────────────────────── */
+:root {
+  --mavi-cyan:         #00D4CC;
+  --mavi-cyan-soft:    #00BDB5;
+  --mavi-teal:         #1A8EA8;
+  --mavi-deep:         #0F6B80;
+  --mavi-grad-start:   #00D4CC;
+  --mavi-grad-end:     #1A7A9A;
+
+  --bg-base:           #0b1219;
+  --bg-surface:        #101c26;
+  --bg-raised:         #162433;
+  --bg-hover:          #1c2e40;
+  --bg-active:         #1e3347;
+
+  --border:            #1e3347;
+  --border-subtle:     #132030;
+  --border-accent:     rgba(0, 212, 204, 0.25);
+
+  --text-primary:      #e4f0f5;
+  --text-secondary:    #7aa8bb;
+  --text-muted:        #3d6478;
+
+  --accent:            var(--mavi-cyan);
+  --accent-hover:      var(--mavi-cyan-soft);
+  --accent-glow:       rgba(0, 212, 204, 0.15);
+  --accent-glow-lg:    rgba(0, 212, 204, 0.08);
+
+  --danger:            #f75f5f;
+  --danger-hover:      #e84545;
+  --success:           #00D4CC;
+  --warning:           #f7c44f;
+
+  --font-ui:           'MontserratAlternates', system-ui, sans-serif;
+  --font-mono:         'JetBrains Mono', 'Fira Mono', monospace;
+
+  --radius-sm:         6px;
+  --radius:            10px;
+  --radius-lg:         16px;
+
+  --titlebar-h:        44px;
+  --sidebar-w:         288px;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: text;
+}
+
+/* Log pode ser selecionado e copiado */
+.log-panel {
+  user-select: text;
+  cursor: text;
+}
+
+/* Resto da UI não precisa ser selecionável */
+.titlebar, .sidebar-section h3, .btn, .path-bar, .file-list-header {
+  user-select: none;
+}
+
+/* ── Scrollbar com tom Mavi ────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 12px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--mavi-deep); }
+
+/* ── Utilitário ────────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }

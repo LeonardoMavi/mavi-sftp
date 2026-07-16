@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self'; img-src 'self'">
+  <title>Mavi SFTP</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/forms.css" />
+  <link rel="stylesheet" href="../css/file-browser.css" />
+  <link rel="stylesheet" href="../css/overlays.css" />
+</head>
+<body>
+
+  <!-- Title Bar -->
+  <div class="titlebar">
+    <div class="titlebar-brand">
+      <img class="titlebar-logo" src="../assets/logo.png" alt="Mavi" />
+      <div class="titlebar-divider"></div>
+      <span class="titlebar-app-name">SFTP</span>
+    </div>
+    <div class="titlebar-right">
+      <span class="titlebar-status" id="status-indicator">Desconectado</span>
+      <div class="window-controls" aria-label="Controles da janela">
+        <button class="window-control" id="btn-window-minimize" title="Minimizar" aria-label="Minimizar">−</button>
+        <button class="window-control" id="btn-window-maximize" title="Maximizar" aria-label="Maximizar">□</button>
+        <button class="window-control window-close" id="btn-window-close" title="Fechar" aria-label="Fechar">×</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <!-- Sidebar: conexão + favoritos + log -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h3 class="section-label">Conexão</h3>
+        <div class="form-group">
+          <label>Host</label>
+          <input type="text" id="input-host" placeholder="sftp.servidor.com" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Porta</label>
+            <input type="number" id="input-port" value="22" />
+          </div>
+          <div class="form-group flex-grow">
+            <label>Usuário</label>
+            <input type="text" id="input-user" placeholder="usuario" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="input-pass" placeholder="••••••••" />
+        </div>
+        <button class="btn btn-primary" id="btn-connect">Conectar</button>
+        <button class="btn btn-danger hidden" id="btn-disconnect">Desconectar</button>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="section-label">Favoritos</h3>
+        <div id="favorites-list" class="favorites-list">
+          <span class="empty-hint">Nenhum favorito ainda</span>
+        </div>
+        <button class="btn btn-ghost" id="btn-save-favorite">+ Salvar conexão atual</button>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="section-label">Log</h3>
+        <div id="log-panel" class="log-panel"></div>
+      </div>
+    </aside>
+
+    <!-- Main: navegador de arquivos -->
+    <main class="main-panel" id="main-panel">
+
+      <!-- Estado: desconectado -->
+      <div class="empty-state" id="empty-state">
+        <img class="empty-logo" src="../assets/logo.png" alt="Mavi" />
+        <p class="empty-title">Nenhuma conexão ativa</p>
+        <p class="empty-sub">Preencha os dados na lateral e conecte para navegar nos arquivos remotos</p>
+      </div>
+
+      <!-- Navegador (oculto até conectar) -->
+      <div class="file-browser hidden" id="file-browser">
+
+        <!-- Barra de caminho -->
+        <div class="path-bar">
+          <button class="path-btn" id="btn-up" title="Voltar">↑</button>
+          <div class="path-breadcrumb" id="breadcrumb">/</div>
+          <input class="file-search-input" id="file-search" type="search" placeholder="Buscar arquivo..." />
+          <div class="path-actions">
+            <button class="btn btn-sm" id="btn-upload" title="Enviar arquivo">↑ Upload</button>
+            <button class="btn btn-sm" id="btn-mkdir" title="Nova pasta">+ Pasta</button>
+            <button class="btn btn-sm" id="btn-download-folder-csv"  title="Baixar pasta atual em CSV">↓ CSV</button>
+            <button class="btn btn-sm" id="btn-download-folder-xlsx" title="Baixar pasta atual em Excel">↓ xlsx</button>
+            <button class="btn btn-sm" id="btn-download-folder-both" title="Baixar pasta atual em CSV e Excel">↓ Ambos</button>
+            <button class="btn btn-sm" id="btn-refresh" title="Atualizar">↻ Atualizar</button>
+          </div>
+        </div>
+
+        <!-- Cabeçalho da tabela -->
+        <div class="file-list-header">
+          <span></span>
+          <button class="file-sort-btn active asc" data-sort="name" id="sort-name">Nome</button>
+          <button class="file-sort-btn" data-sort="size" id="sort-size">Tamanho</button>
+          <button class="file-sort-btn" data-sort="modifyTime" id="sort-date">Modificado</button>
+          <span></span>
+        </div>
+
+        <div id="file-list" class="file-list">
+          <div class="loading-spinner" id="loading">Carregando...</div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal genérico -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal">
+      <h3 class="modal-title" id="modal-title">Ação</h3>
+      <input type="text" class="modal-input" id="modal-input" />
+      <div class="modal-options hidden" id="modal-options"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="modal-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="modal-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Progresso de download -->
+  <div id="download-progress" class="download-progress hidden">
+    <div class="download-progress-header">
+      <span id="download-progress-title">Baixando arquivos</span>
+      <span class="download-progress-percent"></span>
+    </div>
+    <div class="download-progress-track">
+      <div id="download-progress-fill" class="download-progress-fill"></div>
+    </div>
+    <div id="download-progress-info" class="download-progress-info">0/1 arquivo(s) baixado(s)</div>
+  </div>
+
+  <script type="module" src="../../../dist/renderer/ts/app.js"></script>
+</body>
+</html>
