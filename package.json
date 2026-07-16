@@ -12,7 +12,8 @@
     "pack": "npm run build && electron-builder --dir",
     "dist": "npm run build && electron-builder",
     "prepare-runtime": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-python-runtime.ps1",
-    "installer": "npm run prepare-runtime && npm run dist"
+    "installer": "npm run prepare-runtime && npm run dist",
+    "release": "npm run prepare-runtime && npm run build && electron-builder --publish always"
   },
   "build": {
     "appId": "com.mavi.sftp-client",
@@ -54,7 +55,13 @@
       "createStartMenuShortcut": true,
       "shortcutName": "Mavi SFTP",
       "artifactName": "Mavi-SFTP-Setup-${version}.${ext}"
-    }
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "LeonardoMavi",
+      "repo": "mavi-sftp",
+      "releaseType": "release"
+  }
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -66,6 +73,7 @@
   },
   "dependencies": {
     "@types/ssh2-sftp-client": "^9.0.3",
+    "electron-updater": "^6.8.9",
     "ssh2-sftp-client": "^10.0.3"
   }
 }
