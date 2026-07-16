@@ -1,10 +1,8 @@
 import { app, BrowserWindow, dialog, ipcMain, nativeImage } from 'electron';
-import electronUpdater from 'electron-updater';
+import { autoUpdater } from 'electron-updater';
 import * as path from 'path';
 import { registerConnectionHandlers, endClient } from './ipc/connection.js';
 import { registerFileHandlers } from './ipc/file-operations.js';
-
-const { autoUpdater } = electronUpdater;
 
 // Deve ser definido antes da criacao da janela para o Windows nao usar o
 // AppUserModelId e o icone padrao do executavel Electron.

@@ -274,7 +274,16 @@ def create_document():
     add_step(doc, "Escolha a pasta de instalação, quando solicitado, e conclua o assistente.")
     add_step(doc, "Abra o programa pelo atalho da Área de Trabalho ou pelo menu Iniciar.")
     add_note(doc, "Importante", "O instalador completo inclui os componentes usados pelo aplicativo. Não é necessário instalar Node.js, Electron ou Python separadamente.")
-    add_note(doc, "Windows SmartScreen", "Em instalações sem assinatura digital, o Windows pode exibir um aviso de aplicativo não reconhecido. Confirme a origem do instalador antes de continuar.", warning=True)
+    add_heading(doc, "2.1 Aviso do Microsoft Defender SmartScreen", 2)
+    doc.add_paragraph("Como o instalador atual ainda não possui uma assinatura digital reconhecida, o Windows pode exibir a mensagem “O Windows protegeu o computador” e informar que o Microsoft Defender SmartScreen impediu a execução de um aplicativo não reconhecido.")
+    add_note(doc, "O que significa", "Esse aviso indica que o Windows ainda não conseguiu confirmar a identidade do publicador ou estabelecer reputação para aquela versão do arquivo. Ele não significa, por si só, que um vírus foi detectado.", warning=True)
+    doc.add_paragraph("Prossiga somente quando o instalador tiver sido obtido na Release oficial do repositório do Mavi SFTP ou enviado diretamente por uma pessoa responsável pelo aplicativo.")
+    add_step(doc, "Na tela do SmartScreen, confirme que o arquivo aberto é o instalador esperado do Mavi SFTP.")
+    add_step(doc, "Clique em Mais informações.")
+    add_step(doc, "Verifique novamente o nome do aplicativo e a origem do arquivo.")
+    add_step(doc, "Clique em Executar assim mesmo para iniciar a instalação.")
+    add_note(doc, "Não prossiga", "Se o arquivo veio de um link desconhecido, mensagem suspeita, site não oficial ou fonte que você não consegue confirmar, cancele a instalação e solicite um novo arquivo à equipe responsável.", warning=True)
+    doc.add_paragraph("O aviso pode reaparecer em novas versões porque cada instalador possui um arquivo e um hash diferentes. A solução definitiva é assinar digitalmente o aplicativo com um certificado de assinatura de código confiável. Até que essa assinatura seja configurada, o aviso é esperado em computadores que ainda não reconhecem o instalador.")
 
     add_heading(doc, "3. Conhecendo a interface", 1)
     add_feature_table(doc, [
