@@ -451,5 +451,140 @@ def create_document():
     print(OUTPUT)
 
 
+def create_concise_document():
+    doc = Document()
+    setup_styles(doc)
+
+    # Capa
+    p = doc.add_paragraph()
+    p.paragraph_format.space_before = Pt(85)
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    if LOGO.exists():
+        p.add_run().add_picture(str(LOGO), width=Inches(3.7))
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(38)
+    font(p.add_run("MANUAL DO USUÁRIO"), 28, bold=True)
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    font(p.add_run("Mavi SFTP"), 16, color=BLUE)
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(85)
+    font(p.add_run("Guia rápido com detalhamento do tratamento de bases diárias"), 11, color=MUTED)
+    doc.add_page_break()
+    add_header_footer(doc.sections[0])
+
+    add_heading(doc, "1. Visão geral", 1)
+    doc.add_paragraph("O Mavi SFTP conecta-se a servidores SFTP para navegar, baixar, converter, enviar e organizar arquivos. O aplicativo também possui um tratamento específico para bases de vendas diárias.")
+    add_feature_table(doc, [
+        ("Conexão", "Host, porta, usuário e senha."),
+        ("Arquivos", "Navegação, pesquisa, ordenação, download, upload, renomeação e exclusão."),
+        ("Conversão", "CSV/TXT para XLSX, individualmente ou em lote."),
+        ("Venda diária", "Seleção mensal, separação por dia e geração de concatenado."),
+    ])
+
+    add_heading(doc, "2. Instalação e SmartScreen", 1)
+    add_step(doc, "Execute o instalador Mavi-SFTP-Setup e conclua a instalação.")
+    add_step(doc, "Abra o aplicativo pelo menu Iniciar ou atalho da Área de Trabalho.")
+    add_note(doc, "SmartScreen", "Enquanto o instalador não possuir assinatura digital reconhecida, o Windows pode mostrar “O Windows protegeu o computador”. Isso indica publicador sem reputação reconhecida e não significa, isoladamente, detecção de vírus.", warning=True)
+    doc.add_paragraph("Se o arquivo veio da Release oficial do Mavi SFTP ou da equipe responsável, clique em Mais informações e depois em Executar assim mesmo. Não prossiga se a origem do arquivo for desconhecida.")
+
+    add_heading(doc, "3. Conexão e favoritos", 1)
+    add_step(doc, "Informe Host, Porta (normalmente 22), Usuário e Senha.")
+    add_step(doc, "Clique em Conectar. Ao concluir, a pasta raiz (/) será aberta.")
+    add_step(doc, "Use Desconectar ao terminar ou antes de trocar de servidor.")
+    add_bullet(doc, "Salvar conexão atual cria um favorito com host, porta e usuário; a senha não é armazenada.")
+    add_bullet(doc, "Clique em um favorito para preencher os campos ou no X para removê-lo.")
+
+    add_heading(doc, "4. Navegação e arquivos", 1)
+    add_feature_table(doc, [
+        ("Abrir/voltar", "Dê duplo clique em uma pasta; use ↑ para voltar."),
+        ("Buscar", "Filtra pelo nome dentro da pasta atual."),
+        ("Ordenar", "Clique em Nome, Tamanho ou Modificado; repita para inverter a ordem."),
+        ("Atualizar", "Recarrega a pasta atual."),
+        ("Recentes", "Na raiz, mostra até 30 arquivos mais recentes do servidor."),
+        ("Upload/+ Pasta", "Envia um arquivo ou cria uma subpasta no caminho atual."),
+        ("ren/del", "Renomeia ou exclui. Para excluir, digite exatamente o nome do item."),
+    ])
+    add_note(doc, "Atenção", "A exclusão ocorre diretamente no servidor e não possui lixeira. Pastas podem ser removidas com todo o conteúdo.", warning=True)
+
+    add_heading(doc, "5. Downloads e conversão", 1)
+    add_bullet(doc, "down: baixa um arquivo no formato original.")
+    add_bullet(doc, "xlsx: converte um CSV/TXT individual para Excel.")
+    add_bullet(doc, "CSV, xlsx e Ambos: processam os arquivos compatíveis de uma pasta.")
+    doc.add_paragraph("No download em lote, escolha Todos Arquivos, um período MM/AAAA identificado no nome dos arquivos ou Venda Diária. Depois selecione a pasta local e acompanhe a barra de progresso e o Log.")
+    add_note(doc, "Conversão", "O aplicativo detecta UTF-8/Latin-1 e separadores comuns. Colunas identificadoras como código, EAN, CPF e CNPJ são preservadas como texto. Bases muito grandes podem gerar mais de um XLSX.")
+
+    add_heading(doc, "6. Tratamento de bases de Venda Diária", 1)
+    doc.add_paragraph("Este fluxo é diferente do download mensal comum. Ele reúne as fontes necessárias, lê os registros, separa o conteúdo por data comercial e produz arquivos finais diários e um consolidado mensal.")
+
+    add_heading(doc, "6.1 Arquivos reconhecidos", 2)
+    doc.add_paragraph("O modo aparece quando a pasta contém arquivos com um dos padrões abaixo, com data AAAAMMDD e extensão CSV/TXT opcional:")
+    add_bullet(doc, "BR_VENTAS_AAAAMMDD")
+    add_bullet(doc, "BR_VENDAS_DIARIA_COCACOLA_GPA_ENERGETICOS_SEM_CONCORRENCIA_AAAAMMDD")
+    add_note(doc, "Exemplo", "BR_VENTAS_20260630.csv representa uma fonte datada de 30/06/2026.")
+
+    add_heading(doc, "6.2 Como iniciar", 2)
+    add_step(doc, "Abra a pasta que contém as bases.")
+    add_step(doc, "Clique em CSV, xlsx ou Ambos na barra da pasta ou na linha da pasta desejada.")
+    add_step(doc, "Na janela Escolher download, selecione Baixar Venda Diária do mês MM/AAAA.")
+    add_step(doc, "Escolha a pasta local de destino e aguarde todas as etapas terminarem.")
+
+    add_heading(doc, "6.3 Intervalo de fontes", 2)
+    doc.add_paragraph("Para montar um mês, o aplicativo considera fontes datadas entre o primeiro dia desse mês e dez dias após seu último dia. Essa margem permite capturar bases posteriores que ainda contenham registros comerciais do mês solicitado.")
+    add_note(doc, "Exemplo", "Para junho/2026, são consideradas fontes de 01/06/2026 até 10/07/2026. Isso não significa que registros de julho entrarão no resultado; o filtro interno continuará aceitando somente datas comerciais iniciadas por 202606.")
+
+    add_heading(doc, "6.4 Leitura e separação dos registros", 2)
+    add_bullet(doc, "A codificação é detectada como UTF-8 ou Latin-1.")
+    add_bullet(doc, "O separador é detectado entre ponto e vírgula, vírgula, tabulação e barra vertical.")
+    add_bullet(doc, "A coluna obrigatória é FECHA_COMERCIAL.")
+    add_bullet(doc, "Cada valor válido deve ter oito dígitos no padrão AAAAMMDD.")
+    add_bullet(doc, "Somente linhas cuja FECHA_COMERCIAL começa com o período solicitado são mantidas.")
+    add_bullet(doc, "Cada dia encontrado é gravado em um CSV temporário separado, preservando cabeçalho e separador da fonte.")
+    add_note(doc, "Erro obrigatório", "Se FECHA_COMERCIAL não existir, aquela fonte falha e o motivo é registrado no Log. As demais fontes continuam sendo processadas.", warning=True)
+
+    add_heading(doc, "6.5 Mais de uma fonte para o mesmo dia", 2)
+    doc.add_paragraph("As fontes são tratadas em ordem de nome. Se duas fontes produzirem um resultado para o mesmo dia comercial, o aplicativo substitui o resultado anterior pelo resultado da fonte processada por último. Assim, existe apenas um arquivo final para cada dia.")
+    add_note(doc, "Conferência", "Quando houver bases revisadas ou reenviadas, verifique no Log quais fontes foram processadas e valide o arquivo final do dia antes de utilizá-lo em produção.")
+
+    add_heading(doc, "6.6 Saídas geradas", 2)
+    add_feature_table(doc, [
+        ("Arquivo diário", "Um arquivo para cada FECHA_COMERCIAL encontrada no mês, com sufixo _DIA_AAAAMMDD."),
+        ("CONCATENADO", "CONCATENADO_AAAAMM reúne os dias finais em ordem cronológica."),
+        ("CSV", "Mantém as saídas diárias e o concatenado em CSV."),
+        ("XLSX", "Converte cada saída diária e o concatenado para Excel."),
+        ("Ambos", "Entrega as versões CSV e XLSX."),
+    ])
+    doc.add_paragraph("Na concatenação, o cabeçalho do primeiro dia é mantido e os cabeçalhos dos dias seguintes são removidos, evitando linhas de título repetidas no meio da base.")
+
+    add_heading(doc, "6.7 Progresso, erros e validação", 2)
+    doc.add_paragraph("A barra de progresso alterna entre Baixando e tratando bases, Salvando dias finais e Gerando concatenado. Erros individuais aumentam o contador, mas não interrompem automaticamente os outros arquivos.")
+    add_bullet(doc, "Confira se todos os dias esperados foram gerados.")
+    add_bullet(doc, "Abra uma amostra e valide cabeçalhos, separador, datas e quantidade de linhas.")
+    add_bullet(doc, "Confira o CONCATENADO_AAAAMM e verifique se há apenas um cabeçalho.")
+    add_bullet(doc, "Leia avisos e erros no Log antes de usar os arquivos.")
+    add_bullet(doc, "Se um dia estiver ausente, confirme se alguma fonte possui FECHA_COMERCIAL correspondente e se está dentro do intervalo aceito.")
+
+    add_heading(doc, "7. Atualizações", 1)
+    doc.add_paragraph("O aplicativo instalado consulta as Releases do GitHub quando há internet. Ao baixar uma versão nova, exibe a opção Reiniciar e atualizar. Esse recurso não funciona ao abrir o projeto com npm start.")
+    add_note(doc, "Versão inicial", "Se uma versão apresentar erro antes de abrir, ela não consegue executar o atualizador e a próxima versão corrigida precisa ser instalada manualmente uma vez.", warning=True)
+
+    add_heading(doc, "8. Solução rápida", 1)
+    add_feature_table(doc, [
+        ("Falha na conexão", "Revise host, porta, usuário, senha, internet/VPN e acesso ao servidor."),
+        ("Nenhum CSV", "A pasta ou período não possui CSV/TXT compatível."),
+        ("Venda diária falhou", "Confirme FECHA_COMERCIAL e datas AAAAMMDD; consulte o Log."),
+        ("Erro de gravação", "Verifique espaço em disco e permissão da pasta local."),
+        ("Suporte", "Envie a operação, a mensagem e as últimas linhas do Log; nunca envie a senha."),
+    ])
+
+    doc.core_properties.title = "Manual do Usuário - Mavi SFTP"
+    doc.core_properties.subject = "Guia sucinto com detalhamento do tratamento de bases diárias"
+    doc.core_properties.author = "Mavi"
+    doc.save(OUTPUT)
+    print(OUTPUT)
+
+
 if __name__ == "__main__":
-    create_document()
+    create_concise_document()

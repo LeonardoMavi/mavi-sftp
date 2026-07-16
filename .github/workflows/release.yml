@@ -37,3 +37,32 @@ jobs:
         run: npm run release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Conferir arquivos da atualizacao
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          $required = @(
+            "release/Mavi-SFTP-Setup-$version.exe",
+            "release/Mavi-SFTP-Setup-$version.exe.blockmap",
+            "release/latest.yml"
+          )
+          foreach ($file in $required) {
+            if (-not (Test-Path -LiteralPath $file)) {
+              throw "Arquivo obrigatorio nao foi gerado: $file"
+            }
+          }
+
+      - name: Garantir arquivos na Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/Mavi-SFTP-Setup-*.exe
+            release/Mavi-SFTP-Setup-*.exe.blockmap
+            release/latest.yml
+          fail_on_unmatched_files: true
+          overwrite_files: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

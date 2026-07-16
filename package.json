@@ -1,6 +1,6 @@
 {
   "name": "sftp-client",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Mavi SFTP Client",
   "author": "Mavi",
   "main": "dist/main/main.js",
