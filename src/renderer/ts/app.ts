@@ -6,7 +6,7 @@ import { showModal, initModalOverlayClose } from './ui/modal.js';
 import { toast } from './ui/toast.js';
 import { log } from './ui/log.js';
 import { finishDownloadProgress, hideDownloadProgress, initDownloadProgressEvents } from './ui/download-progress.js';
-import { joinPath, parentPath } from './utils.js';
+import { parentPath } from './utils.js';
 
 // ── Toolbar de arquivos ───────────────────────────────────────────────────────
 
@@ -18,34 +18,6 @@ function initFileBrowserToolbar(): void {
 
   document.getElementById('btn-refresh')!.addEventListener('click', () => {
     navigate(getCurrentPath());
-  });
-
-  document.getElementById('btn-upload')!.addEventListener('click', async () => {
-    const path = getCurrentPath();
-    log(`Enviando arquivo para ${path}...`, 'info');
-    const result = await window.sftp.upload(path);
-    if (result.ok) {
-      toast(`Upload concluído: ${result.uploaded}`, 'ok');
-      log(`Upload ok: ${result.uploaded}`, 'ok');
-      navigate(path);
-    } else if (result.error !== 'Cancelado') {
-      toast('Erro no upload: ' + result.error, 'err');
-      log('Erro upload: ' + result.error, 'err');
-    }
-  });
-
-  document.getElementById('btn-mkdir')!.addEventListener('click', async () => {
-    const name = await showModal('Nova pasta', 'Nome da pasta');
-    if (!name) return;
-    const newPath = joinPath(getCurrentPath(), name);
-    const result  = await window.sftp.mkdir(newPath);
-    if (result.ok) {
-      toast(`Pasta criada: ${name}`, 'ok');
-      log(`mkdir: ${newPath}`, 'ok');
-      navigate(getCurrentPath());
-    } else {
-      toast('Erro ao criar pasta: ' + result.error, 'err');
-    }
   });
 
   // ── Download da pasta atual ───────────────────────────────────────────────
@@ -130,6 +102,17 @@ function initFavoritesControls(): void {
 }
 
 function initWindowControls(): void {
+  document.getElementById('btn-download-manual')!.addEventListener('click', async () => {
+    const result = await window.manual.download();
+    if (result.ok) {
+      toast('Manual salvo com sucesso!', 'ok');
+      log(`Manual salvo em: ${result.localPath}`, 'ok');
+    } else if (!result.canceled) {
+      toast('Erro ao salvar manual: ' + result.error, 'err');
+      log('Erro ao salvar manual: ' + result.error, 'err');
+    }
+  });
+
   document.getElementById('btn-window-minimize')!.addEventListener('click', () => {
     window.windowControls.minimize();
   });

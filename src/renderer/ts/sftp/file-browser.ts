@@ -2,7 +2,6 @@ import type { SftpFile } from '../types.js';
 import { formatSize, formatDate, joinPath, getFileIcon } from '../utils.js';
 import { toast } from '../ui/toast.js';
 import { log } from '../ui/log.js';
-import { showModal } from '../ui/modal.js';
 import { finishDownloadProgress, hideDownloadProgress, showDownloadProgress } from '../ui/download-progress.js';
 import { selectFolderDownloadPeriod } from './download-periods.js';
 
@@ -123,8 +122,6 @@ function buildFileRow(file: SftpFile, folderHasCsv: boolean, options: { showPath
       ${isDir && folderHasCsv ? `<button class="btn-icon" data-action="download-folder-csv" title="Baixar todos">csv</button>` : ''}
       ${isDir && folderHasCsv ? `<button class="btn-icon" data-action="download-folder-xlsx" title="Baixar todos como Excel">xlsx</button>` : ''}
       ${isDir && folderHasCsv ? `<button class="btn-icon" data-action="download-folder-both" title="Baixar CSV e Excel">ambos</button>` : ''}
-      <button class="btn-icon" data-action="rename" title="Renomear">ren</button>
-      <button class="btn-icon" data-action="delete" title="Deletar">del</button>
     </span>
   `;
   return row;
@@ -204,50 +201,6 @@ async function handleDownloadFolder(folder: SftpFile, asCsv: boolean, asXlsx: bo
   }
 }
 
-async function handleRename(file: SftpFile): Promise<void> {
-  const newName = await showModal('Renomear', 'Novo nome', file.name);
-  if (!newName || newName === file.name) return;
-
-  const oldPath = file.path || joinPath(currentPath, file.name);
-  const parent = oldPath.split('/').slice(0, -1).join('/') || '/';
-  const newPath = joinPath(parent, newName);
-  const result = await window.sftp.rename(oldPath, newPath);
-
-  if (result.ok) {
-    toast(`Renomeado para ${newName}`, 'ok');
-    log(`Renomeado: ${file.name} -> ${newName}`, 'ok');
-    navigate(currentPath);
-  } else {
-    toast('Erro ao renomear: ' + result.error, 'err');
-    log('Erro renomear: ' + result.error, 'err');
-  }
-}
-
-async function handleDelete(file: SftpFile): Promise<void> {
-  const isDir = file.type === 'd';
-  const confirmed = await showModal(
-    `Deletar ${isDir ? 'pasta' : 'arquivo'}`,
-    'Digite o nome para confirmar',
-    '',
-  );
-  if (confirmed !== file.name) {
-    toast('Nome nao confere. Operacao cancelada.', 'info');
-    return;
-  }
-
-  const remotePath = file.path || joinPath(currentPath, file.name);
-  const result = await window.sftp.delete(remotePath, isDir);
-
-  if (result.ok) {
-    toast(`${file.name} deletado`, 'ok');
-    log(`Deletado: ${remotePath}`, 'ok');
-    navigate(currentPath);
-  } else {
-    toast('Erro ao deletar: ' + result.error, 'err');
-    log('Erro delete: ' + result.error, 'err');
-  }
-}
-
 function attachRowEvents(row: HTMLElement, file: SftpFile): void {
   if (file.type === 'd') {
     row.addEventListener('dblclick', () => navigate(joinPath(currentPath, file.name)));
@@ -278,15 +231,6 @@ function attachRowEvents(row: HTMLElement, file: SftpFile): void {
     handleDownloadFolder(file, true, true);
   });
 
-  row.querySelector('[data-action="rename"]')?.addEventListener('click', e => {
-    e.stopPropagation();
-    handleRename(file);
-  });
-
-  row.querySelector('[data-action="delete"]')?.addEventListener('click', e => {
-    e.stopPropagation();
-    handleDelete(file);
-  });
 }
 
 async function loadRecentFiles(remotePath: string, limit: number): Promise<{ ok: boolean; files?: SftpFile[]; error?: string }> {

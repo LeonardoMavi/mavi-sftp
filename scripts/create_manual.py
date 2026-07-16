@@ -487,10 +487,16 @@ def create_concise_document():
     doc.add_paragraph("O Mavi SFTP conecta-se a servidores SFTP para navegar, baixar, converter, enviar e organizar arquivos. O aplicativo também possui um tratamento específico para bases de vendas diárias.")
     add_feature_table(doc, [
         ("Conexão", "Host, porta, usuário e senha."),
-        ("Arquivos", "Navegação, pesquisa, ordenação, download, upload, renomeação e exclusão."),
+        ("Arquivos", "Navegação, pesquisa, ordenação e extração/download em modo somente leitura."),
         ("Conversão", "CSV/TXT para XLSX, individualmente ou em lote."),
         ("Venda diária", "Seleção mensal, separação por dia e geração de concatenado."),
     ])
+    add_heading(doc, "1.1 Regra obrigatória: SFTP somente leitura", 2)
+    add_note(doc, "PROIBIDO NO SFTP", "Não temos permissão para excluir, alterar, adicionar, enviar, substituir, mover ou renomear arquivos e pastas no servidor SFTP. O aplicativo opera exclusivamente em modo de leitura e extração.", warning=True)
+    add_bullet(doc, "No SFTP, é permitido apenas consultar pastas, localizar arquivos e extrair cópias para o computador.")
+    add_bullet(doc, "Qualquer edição, inclusão de conteúdo, alteração de nome ou organização deve ser feita somente na cópia local, depois do download.")
+    add_bullet(doc, "Arquivos tratados ou modificados localmente nunca devem ser enviados de volta ao SFTP por este aplicativo.")
+    add_bullet(doc, "Os botões e APIs de upload, criação de pasta, renomeação e exclusão foram removidos do aplicativo.")
 
     add_heading(doc, "2. Instalação e SmartScreen", 1)
     add_step(doc, "Execute o instalador Mavi-SFTP-Setup e conclua a instalação.")
@@ -512,10 +518,10 @@ def create_concise_document():
         ("Ordenar", "Clique em Nome, Tamanho ou Modificado; repita para inverter a ordem."),
         ("Atualizar", "Recarrega a pasta atual."),
         ("Recentes", "Na raiz, mostra até 30 arquivos mais recentes do servidor."),
-        ("Upload/+ Pasta", "Envia um arquivo ou cria uma subpasta no caminho atual."),
-        ("ren/del", "Renomeia ou exclui. Para excluir, digite exatamente o nome do item."),
+        ("Ações permitidas", "Abrir pastas, pesquisar, ordenar, atualizar e extrair arquivos."),
+        ("Ações locais", "Após extrair, editar, renomear e criar cópias apenas no computador."),
     ])
-    add_note(doc, "Atenção", "A exclusão ocorre diretamente no servidor e não possui lixeira. Pastas podem ser removidas com todo o conteúdo.", warning=True)
+    add_note(doc, "Bloqueio", "O Mavi SFTP não oferece comandos para upload, criação de pasta, exclusão, alteração ou renomeação remota. Se alguma versão exibir essas opções, não as utilize e comunique imediatamente à equipe responsável.", warning=True)
 
     add_heading(doc, "5. Downloads e conversão", 1)
     add_bullet(doc, "down: baixa um arquivo no formato original.")
@@ -527,6 +533,7 @@ def create_concise_document():
     doc.add_page_break()
     add_heading(doc, "6. TRATAMENTO DE BASES DIÁRIAS — PASSO A PASSO DETALHADO", 1)
     doc.add_paragraph("Este fluxo é diferente do download mensal comum. Ele reúne as fontes necessárias, lê os registros, separa o conteúdo por data comercial e produz arquivos finais diários e um consolidado mensal.")
+    add_note(doc, "Somente leitura", "Todo o tratamento lê os arquivos remotos e grava os resultados exclusivamente na pasta local escolhida. Nenhum arquivo do SFTP é alterado, renomeado, excluído, substituído ou criado durante o processo.", warning=True)
 
     add_heading(doc, "6.1 Arquivos reconhecidos", 2)
     doc.add_paragraph("O modo aparece quando a pasta contém arquivos com um dos padrões abaixo, com data AAAAMMDD e extensão CSV/TXT opcional:")

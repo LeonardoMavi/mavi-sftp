@@ -38,10 +38,6 @@ export interface SftpDownloadResult extends SftpResult {
   logs?: string[];
 }
 
-export interface SftpUploadResult extends SftpResult {
-  uploaded?: string;
-}
-
 export interface DownloadProgressPayload {
   completed: number;
   total: number;
@@ -66,15 +62,14 @@ declare global {
       downloadAsXlsx: (remotePath: string, name: string)         => Promise<SftpDownloadResult>;
       downloadFolder: (remotePath: string, asCsv: boolean, asXlsx: boolean, period?: string | null, fileNames?: string[], mode?: string) => Promise<{ ok: boolean; downloaded?: number; errors?: number; error?: string; localPaths?: string[]; warnings?: string[]; logs?: string[]; }>;
       onDownloadProgress: (callback: (payload: DownloadProgressPayload) => void) => () => void;
-      upload:         (remotePath: string)                       => Promise<SftpUploadResult>;
-      mkdir:          (path: string)                             => Promise<SftpResult>;
-      delete:         (path: string, isDir: boolean)             => Promise<SftpResult>;
-      rename:         (oldPath: string, newPath: string)         => Promise<SftpResult>;
     };
     windowControls: {
       minimize:       () => Promise<void>;
       toggleMaximize: () => Promise<boolean>;
       close:          () => Promise<void>;
+    };
+    manual: {
+      download: () => Promise<{ ok: boolean; canceled?: boolean; localPath?: string; error?: string }>;
     };
   }
 }

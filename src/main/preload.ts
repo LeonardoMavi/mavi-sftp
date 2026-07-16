@@ -13,14 +13,14 @@ contextBridge.exposeInMainWorld('sftp', {
     ipcRenderer.on('sftp:download-progress', listener);
     return () => ipcRenderer.removeListener('sftp:download-progress', listener);
   },
-  upload:             (remotePath: string)               => ipcRenderer.invoke('sftp:upload', remotePath),
-  mkdir:              (path: string)                     => ipcRenderer.invoke('sftp:mkdir', path),
-  delete:             (path: string, isDir: boolean)     => ipcRenderer.invoke('sftp:delete', path, isDir),
-  rename:             (oldPath: string, newPath: string) => ipcRenderer.invoke('sftp:rename', oldPath, newPath),
 });
 
 contextBridge.exposeInMainWorld('windowControls', {
   minimize:       () => ipcRenderer.invoke('window:minimize'),
   toggleMaximize: () => ipcRenderer.invoke('window:toggleMaximize'),
   close:          () => ipcRenderer.invoke('window:close'),
+});
+
+contextBridge.exposeInMainWorld('manual', {
+  download: () => ipcRenderer.invoke('manual:download'),
 });
