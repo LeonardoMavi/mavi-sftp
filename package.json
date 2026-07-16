@@ -1,6 +1,6 @@
 {
   "name": "sftp-client",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Mavi SFTP Client",
   "author": "Mavi",
   "main": "dist/main/main.js",
@@ -35,6 +35,13 @@
       "dist/main/python/**/*"
     ],
     "extraResources": [
+      {
+        "from": "dist/main/python",
+        "to": "python-scripts",
+        "filter": [
+          "*.py"
+        ]
+      },
       {
         "from": "build/python-runtime",
         "to": "python",

@@ -65,6 +65,13 @@ function getDownloadLabel(fileName: string): string {
 
 function getPythonScriptPath(scriptName: string): string {
   const candidates = [
+    // Copia externa explicita criada por extraResources. Este e o caminho
+    // principal no aplicativo instalado e pode ser lido por outro processo.
+    path.join(process.resourcesPath, 'python-scripts', scriptName),
+    // Arquivos marcados com asarUnpack ficam fisicamente neste diretorio.
+    // Processos externos, como o Python portatil, nao conseguem ler caminhos
+    // virtuais que apontam para dentro de app.asar.
+    path.join(process.resourcesPath, 'app.asar.unpacked', 'dist', 'main', 'python', scriptName),
     path.join(process.cwd(), 'src/main/python', scriptName),
     path.join(process.cwd(), 'dist/main/python', scriptName),
     path.join(__dirname, '../python', scriptName),
